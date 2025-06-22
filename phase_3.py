@@ -6,6 +6,22 @@ from dotenv import load_dotenv
 
 import streamlit as st
 
+# --- START: DEBUGGING ---
+st.write("### Debugging Info")
+st.write(f"Current Working Directory: `{os.getcwd()}`")
+st.write("Root Directory Contents:")
+try:
+    st.write(os.listdir("."))
+except Exception as e:
+    st.write(f"Error listing root directory: {e}")
+
+st.write("Knowledgebase Directory Contents:")
+try:
+    st.write(os.listdir("./knowledgebase"))
+except Exception as e:
+    st.write(f"Error listing knowledgebase directory: {e}")
+st.write("--- END: DEBUGGING ---")
+
 # Phase 2 libraries
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
