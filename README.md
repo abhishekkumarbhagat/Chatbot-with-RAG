@@ -26,8 +26,9 @@ To develop a RAG chatbot trained on customer support documentation that can assi
 ├── .gitignore                 # Files and folders ignored by Git
 ├── app.py                     # Entry point for some deployment platforms
 ├── phase_3.py                 # The main Streamlit application logic
-├── requirements.txt           # List of dependencies for deployment
-├── test_dependencies.py       # Script to test all dependencies
+├── requirements.txt           # List of dependencies for pip
+├── Pipfile                    # Dependencies for pipenv (preferred for deployment)
+├── Pipfile.lock              # Locked versions for pipenv
 ├── README.md                  # This file
 └── ...
 ```
@@ -56,6 +57,12 @@ This guide covers both running the app locally and deploying it to Streamlit Com
     python -m venv venv
     source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
     pip install -r requirements.txt
+    ```
+    
+    **Alternative: Using pipenv (recommended for deployment)**
+    ```bash
+    pipenv install
+    pipenv shell
     ```
 
 3.  **Set Up Your API Key:**
@@ -87,6 +94,8 @@ This will verify that all required packages are available and working correctly.
 ### Part 2: Deploying to Streamlit Community Cloud
 
 This is the recommended and easiest way to host your chatbot for free.
+
+**Note:** Streamlit automatically detects and uses the `Pipfile` for dependency management, which is why we've included both `Pipfile` and `requirements.txt`.
 
 1.  **Push to GitHub:**
     Make sure your `knowledgebase` folder and all your latest code are pushed to your GitHub repository. The `fix/deployment` branch is confirmed to be working.

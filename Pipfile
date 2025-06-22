@@ -8,10 +8,16 @@ streamlit = "*"
 openai = "*"
 langchain-openai = "*"
 langchain-community = "*"
+langchain-core = "*"
 pypdf = "*"
 sentence-transformers = "*"
 docx2txt = "*"
 python-dotenv = "*"
+langchain = "*"
+requests = "*"
+beautifulsoup4 = "*"
+lxml = "*"
+soupsieve = "*"
 
 [dev-packages]
 
