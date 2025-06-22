@@ -31,9 +31,9 @@ st.write("--- END: DEBUGGING ---")
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import OpenAIEmbeddings
 
 # Phase 3 libraries
-from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import PyPDFLoader, Docx2txtLoader
 from langchain.indexes import VectorstoreIndexCreator
@@ -122,7 +122,7 @@ def get_vectorstore():
     try:
         # Create chunks, aka vector database–Chromadb
         index = VectorstoreIndexCreator(
-            embedding=HuggingFaceEmbeddings(model_name='all-MiniLM-L12-v2'),
+            embedding=OpenAIEmbeddings(api_key=os.environ.get("OPENAI_API_KEY")),
             text_splitter=RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         ).from_loaders(loaders)
         
