@@ -12,6 +12,7 @@ To develop a RAG chatbot trained on customer support documentation that can assi
 - **Strict Boundary Enforcement**: Responds with "I don't know" for any question outside the knowledge base.
 - **User-Friendly Interface**: Modern and simple web interface built with Streamlit.
 - **Multi-Format Support**: Loads both PDF and DOCX files from the `knowledgebase` folder.
+- **Web Scraping Integration**: Automatically scrapes support articles from AngelOne support portal (https://www.angelone.in/support).
 - **Cloud-Native Embeddings**: Uses OpenAI's embedding service, avoiding local GPU/CPU dependency issues.
 - **Secure Deployment**: API keys are protected using environment variables and are not stored in the code.
 
@@ -26,6 +27,7 @@ To develop a RAG chatbot trained on customer support documentation that can assi
 ├── app.py                     # Entry point for some deployment platforms
 ├── phase_3.py                 # The main Streamlit application logic
 ├── requirements.txt           # List of dependencies for deployment
+├── test_dependencies.py       # Script to test all dependencies
 ├── README.md                  # This file
 └── ...
 ```
@@ -72,6 +74,16 @@ This guide covers both running the app locally and deploying it to Streamlit Com
     ```
     The app should open in your web browser.
 
+### Testing Dependencies
+
+Before running the app, you can test if all dependencies are properly installed:
+
+```bash
+python test_dependencies.py
+```
+
+This will verify that all required packages are available and working correctly.
+
 ### Part 2: Deploying to Streamlit Community Cloud
 
 This is the recommended and easiest way to host your chatbot for free.
@@ -108,6 +120,15 @@ This chatbot uses Retrieval-Augmented Generation (RAG) to provide accurate, sour
 3.  **Vector Embedding (via OpenAI)**: Each chunk is converted into a numerical representation (embedding) using OpenAI's powerful models.
 4.  **Query Processing**: When you ask a question, it's also converted into an embedding.
 5.  **Answer Generation**: The most relevant document chunks are sent to the OpenAI LLM along with your original question, and it generates an answer based *only* on that provided information.
+
+## 📚 Knowledge Base
+
+The chatbot combines multiple sources of information:
+
+- **Local Documents**: PDF and DOCX files from the `knowledgebase/` folder
+- **Web Integration**: Automatically scrapes support articles from AngelOne support portal
+- **Dynamic Content**: Combines local documents with live web content for comprehensive knowledge base
+- **Fallback Mechanism**: If web scraping fails, the chatbot continues to work with local documents only
 
 ## 🔒 Security
 

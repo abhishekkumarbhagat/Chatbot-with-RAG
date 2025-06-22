@@ -9,6 +9,9 @@ from dotenv import load_dotenv
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 # --- END: FORCE CPU ---
 
+# Set USER_AGENT to avoid warnings
+os.environ['USER_AGENT'] = 'Insurance-Support-Chatbot/1.0'
+
 import streamlit as st
 
 
@@ -81,7 +84,10 @@ def get_all_support_links(url):
     Crawls the given URL and returns a list of all unique support article links.
     """
     try:
-        response = requests.get(url)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()  # Raise an exception for bad status codes
         soup = BeautifulSoup(response.content, 'html.parser')
         
@@ -106,6 +112,9 @@ def get_all_support_links(url):
         return list(links)
     except requests.exceptions.RequestException as e:
         st.error(f"Error fetching support page: {e}")
+        return []
+    except Exception as e:
+        st.error(f"Unexpected error during web scraping: {e}")
         return []
 
 # Phase 3 (Pre-requisite)
@@ -134,18 +143,21 @@ def get_vectorstore():
                     st.warning(f"Failed to load DOCX {filename}: {str(e)}")
 
     # --- 2. Load Web Pages ---
-    support_url = "https://www.angelone.in/support"
-    st.sidebar.write(f"Scraping web pages from: {support_url}")
-    with st.spinner(f"Fetching links from {support_url}..."):
-        support_links = get_all_support_links(support_url)
+    try:
+        support_url = "https://www.angelone.in/support"
+        st.sidebar.write(f"Scraping web pages from: {support_url}")
+        with st.spinner(f"Fetching links from {support_url}..."):
+            support_links = get_all_support_links(support_url)
 
-    if support_links:
-        st.sidebar.success(f"Found {len(support_links)} support articles to load.")
-        # For demonstration, limit the number of pages to load, can be removed for full scrape
-        # loaders.extend([WebBaseLoader(link) for link in support_links[:10]]) 
-        loaders.extend([WebBaseLoader(link) for link in support_links])
-    else:
-        st.sidebar.warning("Could not find any support articles to load from the web.")
+        if support_links:
+            st.sidebar.success(f"Found {len(support_links)} support articles to load.")
+            # For demonstration, limit the number of pages to load, can be removed for full scrape
+            # loaders.extend([WebBaseLoader(link) for link in support_links[:10]]) 
+            loaders.extend([WebBaseLoader(link) for link in support_links])
+        else:
+            st.sidebar.warning("Could not find any support articles to load from the web.")
+    except Exception as e:
+        st.sidebar.warning(f"Web scraping failed: {str(e)}. Continuing with local documents only.")
 
     if not loaders:
         st.error("No documents or web pages found to load. The knowledge base is empty.")
