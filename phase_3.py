@@ -48,7 +48,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title('🏥 Insurance Support Chatbot')
+st.title('Insurance Support Chatbot')
 st.markdown("**Your AI assistant for insurance plan questions and support**")
 st.markdown("---")
 
@@ -122,7 +122,7 @@ def get_vectorstore():
         ).from_loaders(loaders)
         
         with st.sidebar:
-            st.success(f"✅ Successfully loaded {len(loaded_files)} documents!")
+            st.success(f"Successfully loaded {len(loaded_files)} documents!")
             for file in loaded_files:
                 st.markdown(f"• {file}")
         
@@ -136,7 +136,7 @@ with st.spinner("Loading knowledge base..."):
     vectorstore = get_vectorstore()
 
 if vectorstore is None:
-    st.error("❌ Failed to load knowledge base. Please check your OPENAI_API_KEY and knowledgebase folder.")
+    st.error("Failed to load knowledge base. Please check your OPENAI_API_KEY and knowledgebase folder.")
     st.stop()
 
 prompt = st.chat_input('Ask about your insurance benefits...')
@@ -217,13 +217,13 @@ Answer based ONLY on the insurance documents. If the question is not about insur
         except Exception as e:
             error_msg = f"Error: {str(e)}"
             if "OPENAI_API_KEY" in str(e):
-                error_msg = "❌ OPENAI_API_KEY not found. Please set your OpenAI API key in the .env file."
+                error_msg = "OPENAI_API_KEY not found. Please set your OpenAI API key in the .env file."
             elif "rate limit" in str(e).lower():
-                error_msg = "❌ Rate limit exceeded. Please try again in a moment."
+                error_msg = "Rate limit exceeded. Please try again in a moment."
             elif "401" in str(e) or "not_authorized" in str(e).lower():
-                error_msg = "❌ Invalid API key or insufficient permissions. Please check your OpenAI API key and ensure you have access to the required models."
+                error_msg = "Invalid API key or insufficient permissions. Please check your OpenAI API key and ensure you have access to the required models."
             elif "quota" in str(e).lower():
-                error_msg = "❌ API quota exceeded. Please check your OpenAI account billing."
+                error_msg = "API quota exceeded. Please check your OpenAI account billing."
             
             with st.chat_message('assistant'):
                 st.error(error_msg)
@@ -231,8 +231,7 @@ Answer based ONLY on the insurance documents. If the question is not about insur
             st.session_state.messages.append(
                 {'role':'assistant', 'content': "I'm sorry, I encountered an error. Please check your API key and try again."})
 
-# Add a clear chat button
-if st.button("🗑️ Clear Chat History"):
+if st.button("Clear Chat History"):
     st.session_state.messages = []
     st.rerun()
 
