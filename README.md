@@ -113,13 +113,6 @@ This chatbot uses Retrieval-Augmented Generation (RAG) to provide accurate, sour
 
 - **API Key Protection**: Your OpenAI key is loaded from a `.env` file locally and from Streamlit's secret manager in the cloud. It is **never** exposed in the code or on GitHub.
 - **`.gitignore`**: The `.gitignore` file is configured to prevent sensitive files like `.env` from ever being tracked by git.
-
-## 🐛 Troubleshooting
-
-- **"Knowledgebase folder not found"**: This error occurs if the `knowledgebase` folder and its contents were not successfully pushed to your GitHub repository.
-- **`libcublas.so` Error**: This was a deployment error caused by trying to use a local embedding model that required a GPU. It has been **permanently fixed** by switching to `OpenAIEmbeddings`.
-- **Authentication Errors on Streamlit Cloud**: If you have trouble connecting your GitHub repo, sign out of Streamlit Cloud and sign back in to refresh your authentication token.
-
 ---
 
 *This project is ready for use and further development.*
