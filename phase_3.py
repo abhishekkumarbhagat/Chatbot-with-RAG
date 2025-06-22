@@ -4,6 +4,11 @@ import warnings
 import logging
 from dotenv import load_dotenv
 
+# --- START: FORCE CPU ---
+# Set this environment variable BEFORE importing any heavy libraries like torch or sentence_transformers
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
+# --- END: FORCE CPU ---
+
 import streamlit as st
 
 # --- START: DEBUGGING ---
@@ -117,10 +122,7 @@ def get_vectorstore():
     try:
         # Create chunks, aka vector database–Chromadb
         index = VectorstoreIndexCreator(
-            embedding=HuggingFaceEmbeddings(
-                model_name='all-MiniLM-L12-v2',
-                model_kwargs={'device': 'cpu'}
-            ),
+            embedding=HuggingFaceEmbeddings(model_name='all-MiniLM-L12-v2'),
             text_splitter=RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         ).from_loaders(loaders)
         
