@@ -12,6 +12,7 @@ Develop a RAG chatbot trained on customer support documentation to assist users 
 - **Strict Boundary Enforcement**: Responds with "I don't know" for any question outside the knowledge base.
 - **User-Friendly Interface**: Modern and simple web interface built with Streamlit.
 - **Multi-Format Support**: Loads both PDF and DOCX files from the `knowledgebase` folder.
+- **Web Scraping Integration**: Automatically scrapes support articles from AngelOne support portal (https://www.angelone.in/support).
 - **Cloud-Native Embeddings**: Uses OpenAI's embedding service, avoiding local dependency issues.
 - **Secure Deployment**: API keys are protected using environment variables.
 
@@ -150,6 +151,8 @@ pipenv run streamlit run phase_3.py
 - **Location**: `./knowledgebase/` folder
 - **Supported Formats**: PDF and DOCX files
 - **Auto-loading**: All supported files are automatically loaded on startup
+- **Web Integration**: Automatically scrapes support articles from AngelOne support portal (https://www.angelone.in/support)
+- **Dynamic Content**: Combines local documents with live web content for comprehensive knowledge base
 
 ## 🧠 How RAG Works
 
