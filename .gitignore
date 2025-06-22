@@ -142,6 +142,8 @@ Thumbs.db
 uploads/
 downloads/
 temp/
+
+# The lines below are commented out to ensure deployment works.
 # Do not ignore document files in the knowledgebase
 # *.pdf
 # *.docx
