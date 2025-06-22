@@ -268,6 +268,6 @@ Feel free to submit issues and enhancement requests!
 
 ## 🚀 Deployment Status
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-name.streamlit.app)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://insurance-support-chatbot.streamlit.app)
 
 *Replace the badge URL with your actual deployed app URL*
