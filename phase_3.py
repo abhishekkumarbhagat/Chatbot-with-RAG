@@ -152,7 +152,7 @@ if prompt:
     # Check if OPENAI_API_KEY is set
     if not os.environ.get("OPENAI_API_KEY"):
         with st.chat_message('assistant'):
-            st.error("❌ OPENAI_API_KEY not found. Please set your OpenAI API key in the .env file.")
+            st.error("OPENAI_API_KEY not found. Please set your OpenAI API key in the .env file.")
         st.session_state.messages.append(
             {'role':'assistant', 'content': "I'm sorry, I cannot access the knowledge base. Please set your OPENAI_API_KEY in the .env file."})
     else:
