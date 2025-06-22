@@ -7,30 +7,35 @@ This script helps you set up and run the RAG chatbot with your insurance documen
 import os
 import subprocess
 import sys
+from dotenv import load_dotenv
 
-def check_groq_api_key():
-    """Check if GROQ_API_KEY is set"""
-    api_key = os.environ.get("GROQ_API_KEY")
+# Load environment variables from .env file
+load_dotenv()
+
+def check_openai_api_key():
+    """Check if OPENAI_API_KEY is set"""
+    api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        print("❌ GROQ_API_KEY not found!")
-        print("\nTo set your GROQ API key, you have two options:")
-        print("\nOption 1: Set it temporarily for this session:")
-        print("export GROQ_API_KEY='your-api-key-here'")
+        print("❌ OPENAI_API_KEY not found!")
+        print("\nTo set your OpenAI API key, you have two options:")
+        print("\nOption 1: Set it in the .env file (Recommended):")
+        print("echo 'OPENAI_API_KEY=your-api-key-here' > .env")
         print("python run_chatbot.py")
         
-        print("\nOption 2: Set it permanently in your shell profile:")
-        print("echo 'export GROQ_API_KEY=\"your-api-key-here\"' >> ~/.zshrc")
-        print("source ~/.zshrc")
+        print("\nOption 2: Set it temporarily for this session:")
+        print("export OPENAI_API_KEY='your-api-key-here'")
+        print("python run_chatbot.py")
         
-        print("\nTo get a GROQ API key:")
-        print("1. Go to https://console.groq.com/")
+        print("\nTo get an OpenAI API key:")
+        print("1. Go to https://platform.openai.com/")
         print("2. Sign up or log in")
-        print("3. Create a new API key")
-        print("4. Copy the key and set it as shown above")
+        print("3. Go to API Keys section")
+        print("4. Create a new API key")
+        print("5. Copy the key and set it as shown above")
         
         return False
     else:
-        print("✅ GROQ_API_KEY is set")
+        print("✅ OPENAI_API_KEY is set")
         return True
 
 def check_knowledgebase():
@@ -59,7 +64,7 @@ def main():
     print("=" * 40)
     
     # Check prerequisites
-    if not check_groq_api_key():
+    if not check_openai_api_key():
         return
     
     if not check_knowledgebase():

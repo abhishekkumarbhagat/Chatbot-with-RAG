@@ -5,11 +5,13 @@ name = "pypi"
 
 [packages]
 streamlit = "*"
-langchain-groq = "*"
+openai = "*"
+langchain-openai = "*"
 langchain-community = "*"
 pypdf = "*"
 sentence-transformers = "*"
 docx2txt = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
