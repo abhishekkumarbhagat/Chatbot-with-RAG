@@ -20,9 +20,13 @@ from langchain_openai import OpenAIEmbeddings
 
 # Phase 3 libraries
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import PyPDFLoader, Docx2txtLoader
+from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, WebBaseLoader
 from langchain.indexes import VectorstoreIndexCreator
 from langchain.chains import RetrievalQA
+
+import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 
 # Load environment variables
 load_dotenv()
@@ -72,38 +76,82 @@ for message in st.session_state.messages:
     with st.chat_message(message['role']):
         st.markdown(message['content'])
 
+def get_all_support_links(url):
+    """
+    Crawls the given URL and returns a list of all unique support article links.
+    """
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        links = set()
+        # Find all anchor tags
+        for a_tag in soup.find_all('a', href=True):
+            href = a_tag['href']
+            # Look for support links - they should contain '/support/' and be longer than just '/support'
+            if '/support/' in href and len(href) > len('/support/'):
+                # Convert relative URLs to absolute URLs
+                if href.startswith('/'):
+                    full_url = urljoin(url, href)
+                elif href.startswith('http'):
+                    full_url = href
+                else:
+                    full_url = urljoin(url, '/' + href)
+                
+                # Filter out pagination links and non-article links
+                if not any(exclude in full_url for exclude in ['/page/', '/hindi']):
+                    links.add(full_url)
+        
+        return list(links)
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error fetching support page: {e}")
+        return []
+
 # Phase 3 (Pre-requisite)
 @st.cache_resource
 def get_vectorstore():
     knowledgebase_path = "./knowledgebase"
     loaders = []
     
+    # --- 1. Load local files ---
     # Check if knowledgebase folder exists
     if not os.path.exists(knowledgebase_path):
-        st.error(f"Knowledgebase folder not found at {knowledgebase_path}")
-        return None
-    
-    # Load all PDF and DOCX files from knowledgebase folder
-    loaded_files = []
-    for filename in os.listdir(knowledgebase_path):
-        file_path = os.path.join(knowledgebase_path, filename)
-        if filename.lower().endswith('.pdf'):
-            try:
-                loaders.append(PyPDFLoader(file_path))
-                loaded_files.append(filename)
-            except Exception as e:
-                st.warning(f"Failed to load PDF {filename}: {str(e)}")
-        elif filename.lower().endswith('.docx'):
-            try:
-                loaders.append(Docx2txtLoader(file_path))
-                loaded_files.append(filename)
-            except Exception as e:
-                st.warning(f"Failed to load DOCX {filename}: {str(e)}")
-    
+        st.warning(f"Local 'knowledgebase' folder not found at {knowledgebase_path}. Skipping local files.")
+    else:
+        # Load all PDF and DOCX files from knowledgebase folder
+        for filename in os.listdir(knowledgebase_path):
+            file_path = os.path.join(knowledgebase_path, filename)
+            if filename.lower().endswith('.pdf'):
+                try:
+                    loaders.append(PyPDFLoader(file_path))
+                except Exception as e:
+                    st.warning(f"Failed to load PDF {filename}: {str(e)}")
+            elif filename.lower().endswith('.docx'):
+                try:
+                    loaders.append(Docx2txtLoader(file_path))
+                except Exception as e:
+                    st.warning(f"Failed to load DOCX {filename}: {str(e)}")
+
+    # --- 2. Load Web Pages ---
+    support_url = "https://www.angelone.in/support"
+    st.sidebar.write(f"Scraping web pages from: {support_url}")
+    with st.spinner(f"Fetching links from {support_url}..."):
+        support_links = get_all_support_links(support_url)
+
+    if support_links:
+        st.sidebar.success(f"Found {len(support_links)} support articles to load.")
+        # For demonstration, limit the number of pages to load, can be removed for full scrape
+        # loaders.extend([WebBaseLoader(link) for link in support_links[:10]]) 
+        loaders.extend([WebBaseLoader(link) for link in support_links])
+    else:
+        st.sidebar.warning("Could not find any support articles to load from the web.")
+
     if not loaders:
-        st.error("No valid PDF or DOCX files found in knowledgebase folder")
+        st.error("No documents or web pages found to load. The knowledge base is empty.")
         return None
     
+    # --- 3. Create Vector Store ---
     try:
         # Create chunks, aka vector database–Chromadb
         index = VectorstoreIndexCreator(
@@ -112,10 +160,8 @@ def get_vectorstore():
         ).from_loaders(loaders)
         
         with st.sidebar:
-            st.success(f"✅ Successfully loaded {len(loaded_files)} documents!")
-            for file in loaded_files:
-                st.markdown(f"• {file}")
-        
+            st.success(f"✅ Successfully created knowledge base!")
+
         return index.vectorstore
     except Exception as e:
         st.error(f"Error creating vector store: {str(e)}")

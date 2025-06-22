@@ -6,3 +6,6 @@ pypdf==3.17.1
 docx2txt==0.8
 python-dotenv==1.0.0
 langchain==0.0.350 
+requests==2.31.0
+beautifulsoup4==4.12.2
+lxml==4.9.3 
