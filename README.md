@@ -178,27 +178,6 @@ This chatbot uses Retrieval-Augmented Generation (RAG) to provide accurate, sour
 - **API Key Security**: Store your OPENAI_API_KEY securely
 - **Environment Variables**: Sensitive data kept out of code
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **"OPENAI_API_KEY not found"**
-   - Set your API key in `.env` file locally
-   - Use deployment platform secrets for production
-
-2. **"No documents found"**
-   - Ensure PDF/DOCX files are in the `knowledgebase/` folder
-   - Check file permissions
-
-3. **"Failed to load documents"**
-   - Verify file formats are supported (PDF/DOCX)
-   - Check file integrity
-
-4. **Deployment issues**
-   - Check that `requirements.txt` is up to date
-   - Verify environment variables are set correctly
-   - Check deployment platform logs
-
 ### Getting Help
 
 - Check the console output for error messages
