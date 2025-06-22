@@ -1,6 +1,6 @@
 # Insurance Support Chatbot with RAG
 
-A Python-based Retrieval-Augmented Generation (RAG) chatbot specifically designed for insurance customer support. This chatbot is trained on insurance plan documents and can answer questions about benefits, coverage, and plan details.
+A Python-based Retrieval-Augmented Generation (RAG) chatbot designed for insurance customer support. This chatbot is trained on your insurance plan documents to answer questions about benefits, coverage, and plan details. It uses OpenAI for both language understanding and for creating document embeddings.
 
 ## 🎯 Objective
 
@@ -8,12 +8,12 @@ Develop a RAG chatbot trained on customer support documentation to assist users 
 
 ## ✅ Key Features
 
-- **Knowledge-Based Responses**: Only answers questions based on information present in the provided insurance documents
-- **Strict Boundary**: Responds with "I don't know" for questions outside the knowledge base
-- **User-Friendly Interface**: Modern Streamlit web interface with chat functionality
-- **Multi-Format Support**: Loads both PDF and DOCX files from the knowledge base
-- **Real-Time Processing**: Uses OpenAI's GPT models for quick responses
-- **Secure Deployment**: API keys protected through environment variables
+- **Knowledge-Based Responses**: Only answers questions using information from the provided insurance documents.
+- **Strict Boundary Enforcement**: Responds with "I don't know" for any question outside the knowledge base.
+- **User-Friendly Interface**: Modern and simple web interface built with Streamlit.
+- **Multi-Format Support**: Loads both PDF and DOCX files from the `knowledgebase` folder.
+- **Cloud-Native Embeddings**: Uses OpenAI's embedding service, avoiding local dependency issues.
+- **Secure Deployment**: API keys are protected using environment variables.
 
 ## 📋 Requirements Met
 
@@ -23,148 +23,96 @@ Develop a RAG chatbot trained on customer support documentation to assist users 
 
 ## 🏗️ Project Structure
 
+The project has been cleaned up to contain only the essential files.
+
 ```
-Chatbot-with-RAG-main/
-├── README.md                    # Project documentation
-├── .gitignore                   # Python-specific exclusions
-├── Pipfile                      # Dependencies (Pipenv)
-├── Pipfile.lock                 # Locked dependencies
-├── requirements.txt             # Dependencies for deployment
-├── phase_1.py                   # Basic Streamlit UI
-├── phase_2.py                   # LLM integration
-├── phase_3.py                   # Full RAG implementation
-├── app.py                       # Main application entry point
-├── run_chatbot.py              # Helper script to run the chatbot
-├── test_api.py                 # API key test script
-├── Procfile                    # Deployment configuration
-├── runtime.txt                 # Python version specification
-├── .streamlit/config.toml      # Streamlit configuration
-└── knowledgebase/              # Insurance documents folder
-    ├── *.pdf                   # PDF insurance documents
-    └── *.docx                  # DOCX insurance documents
+.
+├── .github/                # (Optional) GitHub Actions workflows
+├── .streamlit/             # Streamlit deployment configuration
+├── knowledgebase/          # Folder for your PDF and DOCX files
+├── .gitignore              # Files and folders ignored by Git
+├── phase_3.py              # The main Streamlit application logic
+├── requirements.txt        # List of dependencies for deployment
+└── README.md               # This file
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start & Deployment Guide
+
+This guide covers both running the app locally and deploying it to Streamlit Community Cloud.
 
 ### Prerequisites
 
 - Python 3.11+
-- Pipenv (for dependency management)
-- OpenAI API key (get one at https://platform.openai.com/)
+- Git
+- An OpenAI API key (get one at [platform.openai.com](https://platform.openai.com/))
 
-### Local Installation
+### Part 1: Running Locally
 
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd Chatbot-with-RAG-main
-   ```
+1.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/abhishekkumarbhagat/Chatbot-with-RAG.git
+    cd Chatbot-with-RAG
+    ```
 
-2. **Install dependencies:**
-   ```bash
-   pipenv install
-   ```
+2.  **Install Dependencies:**
+    It's recommended to use a virtual environment.
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+    pip install -r requirements.txt
+    ```
 
-3. **Set up your OpenAI API key:**
-   ```bash
-   echo "OPENAI_API_KEY=your-api-key-here" > .env
-   ```
+3.  **Set Up Your API Key:**
+    Create a file named `.env` in the root of the project and add your API key to it:
+    ```
+    OPENAI_API_KEY='your-sk-xxxx-api-key-here'
+    ```
+    This file is already in `.gitignore` to prevent it from being committed.
 
-4. **Add your insurance documents:**
-   - Place your PDF and DOCX insurance documents in the `knowledgebase/` folder
-   - The chatbot will automatically load all supported files
+4.  **Add Your Documents:**
+    Place your PDF and DOCX insurance documents inside the `knowledgebase/` folder.
 
-5. **Run the chatbot:**
-   ```bash
-   python run_chatbot.py
-   ```
+5.  **Run the App:**
+    ```bash
+    streamlit run phase_3.py
+    ```
+    The app should open in your web browser.
 
-## 🌐 GitHub Deployment
+### Part 2: Deploying to Streamlit Community Cloud
 
-### Option 1: Deploy to Streamlit Cloud (Recommended)
+This is the recommended and easiest way to host your chatbot for free.
 
-1. **Push your code to GitHub:**
-   ```bash
-   git add .
-   git commit -m "Ready for deployment"
-   git push origin main
-   ```
+1.  **Push to GitHub:**
+    Ensure your `knowledgebase` folder and all your latest code are pushed to your GitHub repository. The `fix/deployment` branch is confirmed to be working.
 
-2. **Deploy on Streamlit Cloud:**
-   - Go to [share.streamlit.io](https://share.streamlit.io)
-   - Sign in with GitHub
-   - Click "New app"
-   - Select your repository
-   - Set the main file path to: `phase_3.py`
-   - Add your secrets:
-     - Go to "Advanced settings"
-     - Add secret: `OPENAI_API_KEY` with your API key value
+2.  **Create an App on Streamlit Cloud:**
+    - Go to [share.streamlit.io](https://share.streamlit.io) and sign in with your GitHub account.
+    - Click **"New app"**.
 
-3. **Your app will be live at:** `https://your-app-name.streamlit.app`
+3.  **Configure and Deploy:**
+    - **Repository**: Select `abhishekkumarbhagat/Chatbot-with-RAG`.
+    - **Branch**: Select `fix/deployment`.
+    - **Main file path**: Set to `phase_3.py`.
+    - Click **"Advanced settings..."**.
 
-### Option 2: Deploy to Railway
+4.  **Add Your Secret Key:**
+    - In the "Secrets" text box, paste your OpenAI API key in TOML format:
+      ```toml
+      OPENAI_API_KEY = "your-sk-xxxx-api-key-here"
+      ```
+    - Click **"Save"**.
 
-1. **Connect to Railway:**
-   - Go to [railway.app](https://railway.app)
-   - Sign in with GitHub
-   - Click "New Project"
-   - Select "Deploy from GitHub repo"
+5.  **Deploy!**
+    - Click the **"Deploy!"** button. Your app will be live in a few minutes.
 
-2. **Configure environment variables:**
-   - Add `OPENAI_API_KEY` with your API key
-   - Add `PORT` (Railway will set this automatically)
+## 🔒 Security
 
-3. **Deploy:**
-   - Railway will automatically detect the Procfile and deploy
+- **API Key Protection**: Your OpenAI key is loaded from a `.env` file locally and from Streamlit's secret manager in the cloud. It is **never** exposed in the code or on GitHub.
+- **`.gitignore`**: The `.gitignore` file is configured to prevent sensitive files like `.env` from ever being tracked by git.
 
-### Option 3: Deploy to Heroku
+---
 
-1. **Install Heroku CLI and login:**
-   ```bash
-   heroku login
-   ```
-
-2. **Create Heroku app:**
-   ```bash
-   heroku create your-app-name
-   ```
-
-3. **Set environment variables:**
-   ```bash
-   heroku config:set OPENAI_API_KEY=your-api-key-here
-   ```
-
-4. **Deploy:**
-   ```bash
-   git push heroku main
-   ```
-
-## 🔒 Security Best Practices
-
-### API Key Protection
-
-1. **Never commit API keys to Git:**
-   - The `.env` file is in `.gitignore`
-   - Use environment variables in production
-
-2. **Use deployment platform secrets:**
-   - Streamlit Cloud: Advanced settings → Secrets
-   - Railway: Environment variables
-   - Heroku: `heroku config:set`
-
-3. **Rotate keys regularly:**
-   - Generate new API keys periodically
-   - Update environment variables accordingly
-
-### Environment Variables
-
-```bash
-# Required
-OPENAI_API_KEY=your-openai-api-key
-
-# Optional (for deployment)
-PORT=8501
-```
+*This project is ready for use and further development.*
 
 ## 🎮 Usage
 
