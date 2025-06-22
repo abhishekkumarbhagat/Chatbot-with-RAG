@@ -28,9 +28,8 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 # Phase 3 libraries
-from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, WebBaseLoader
+from langchain.document_loaders import PyPDFLoader, Docx2txtLoader, WebBaseLoader
 from langchain.indexes import VectorstoreIndexCreator
 from langchain.chains import RetrievalQA
 
@@ -99,20 +98,10 @@ def get_all_support_links(url):
         # Find all anchor tags
         for a_tag in soup.find_all('a', href=True):
             href = a_tag['href']
-            # Look for support links - they should contain '/support/' and be longer than just '/support'
-            if '/support/' in href and len(href) > len('/support/'):
-                # Convert relative URLs to absolute URLs
-                if href.startswith('/'):
-                    full_url = urljoin(url, href)
-                elif href.startswith('http'):
-                    full_url = href
-                else:
-                    full_url = urljoin(url, '/' + href)
-                
-                # Filter out pagination links and non-article links
-                if not any(exclude in full_url for exclude in ['/page/', '/hindi']):
-                    links.add(full_url)
-        
+            # Make sure it's a support link and not a main navigation link
+            if href.startswith('/support/') and len(href) > len('/support/'):
+                full_url = urljoin(url, href)
+                links.add(full_url)
         return list(links)
     except requests.exceptions.RequestException as e:
         st.error(f"Error fetching support page: {e}")
@@ -165,7 +154,7 @@ def get_vectorstore():
     try:
         # Create chunks, aka vector database–Chromadb
         index = VectorstoreIndexCreator(
-            embedding=HuggingFaceEmbeddings(model_name='all-MiniLM-L12-v2'),
+            embedding=OpenAIEmbeddings(api_key=os.environ.get("OPENAI_API_KEY")),
             text_splitter=RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         ).from_loaders(loaders)
         
