@@ -117,7 +117,10 @@ def get_vectorstore():
     try:
         # Create chunks, aka vector database–Chromadb
         index = VectorstoreIndexCreator(
-            embedding=HuggingFaceEmbeddings(model_name='all-MiniLM-L12-v2'),
+            embedding=HuggingFaceEmbeddings(
+                model_name='all-MiniLM-L12-v2',
+                model_kwargs={'device': 'cpu'}
+            ),
             text_splitter=RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         ).from_loaders(loaders)
         
